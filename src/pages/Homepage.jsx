@@ -99,6 +99,9 @@ const Homepage = () => {
                         min: weatherData.main.temp_min,
                         max: weatherData.main.temp_max,
                       }}
+                      windSpeed={newWeatherData.wind.speed}
+                      feelsLikeTemp={newWeatherData.main.feels_like}
+                      pressure={newWeatherData.main.pressure}
                     />
                   </div>
                 </div>
