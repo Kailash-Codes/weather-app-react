@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { ApiKey } from "../config/ApiKey";
-import getWeather from "../feature/getWeather";
 
 const Homepage = () => {
+  const [newWeatherData, setNewWeather] = useState("");
   const [currentLocation, isLocationLoading, isLocationError] = useLocation();
   const [searchLocation, setSearchLocation] = useState("");
   function handleSubmit(e) {
@@ -31,6 +31,13 @@ const Homepage = () => {
             currentLocation?.coords ? currentLocation.coords.longitude : "0"
           }&appid=${ApiKey}`
     );
+  useEffect(() => {
+    if (weatherData) {
+      setNewWeather(weatherData);
+    }
+
+    refetchWeatherData();
+  }, [weatherData, isWeatherLoading]);
   return (
     <div>
       <>
@@ -52,40 +59,8 @@ const Homepage = () => {
           "Weather Error"
         ) : (
           <div>
-            {!weatherData?.main ? (
-              <center>
-                <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px] py-10 rounded-xl  px-5 ">
-                  <form action="" onSubmit={handleSubmit}>
-                    <div className="flex gap-5">
-                      <TextField
-                        placeholder="Enter location..."
-                        variant="standard"
-                        sx={{
-                          padding: "0 10px",
-                          backgroundColor: "white",
-                          borderRadius: "10px",
-                          height: "40px",
-                        }}
-                        inputProps={{
-                          style: {
-                            padding: "9px 0", // adjust this value to change the position of the underline
-                          },
-                        }}
-                        onChange={(e) => setSearchLocation(e.target.value)}
-                        fullWidth
-                      />
-                      <Button type="submit" variant="contained" size="small">
-                        <Search />
-                      </Button>
-                    </div>
-                  </form>
-                  <Box p={5}>
-                    <Typography variant="h4" color={"white"}>
-                      The location is not available. Try searching for another
-                    </Typography>
-                  </Box>
-                </div>
-              </center>
+            {!newWeatherData?.main ? (
+              console.log("weather not found")
             ) : (
               <center>
                 <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px]  rounded-xl py-10 px-5 ">
@@ -116,10 +91,10 @@ const Homepage = () => {
                   {/* //weather data if availabe => weatherData */}
                   <div>
                     <WeatherMainContainer
-                      mainTemp={weatherData.main.temp}
-                      weatherDesc={weatherData.weather[0].description}
-                      placeName={weatherData.name}
-                      weatherIcon={weatherData.weather[0].icon}
+                      mainTemp={newWeatherData.main.temp}
+                      weatherDesc={newWeatherData.weather[0].description}
+                      placeName={newWeatherData.name}
+                      weatherIcon={newWeatherData.weather[0].icon}
                       minAndMaxTemp={{
                         min: weatherData.main.temp_min,
                         max: weatherData.main.temp_max,
