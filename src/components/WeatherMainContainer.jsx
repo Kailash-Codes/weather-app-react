@@ -10,7 +10,7 @@ import './weather.css'
 
 const WeatherMainContainer = (props) => {
   return (
-    <div className=" sm:gap-10 items-center sm:items-start justify-center sm:justify-between text-white container flex sm:flex-row flex-col  px-5  py-10 rounded-lg">
+    <div className=" sm:gap-10 items-center sm:items-start justify-center sm:justify-between text-white container flex sm:flex-row flex-col  pt-10 rounded-lg">
       <div className="">
         <PlaceName placeName={props.placeName} />
         <CurrentTime />
