@@ -6,7 +6,8 @@ export const useWeatherQueryData = (url) => {
   const {
     data: weatherData,
     isLoading: isWeatherLoading,
-    isWeatherError,
+    isError: isWeatherError,
+    refetch:refetchWeatherData,
   } = useQuery({
     queryKey: ["weather-data"],
     queryFn: () => {
@@ -16,5 +17,5 @@ export const useWeatherQueryData = (url) => {
         .catch((e) => e.message);
     },
   });
-  return [weatherData, isWeatherLoading, isWeatherError];
+  return [weatherData, isWeatherLoading, isWeatherError,refetchWeatherData];
 };

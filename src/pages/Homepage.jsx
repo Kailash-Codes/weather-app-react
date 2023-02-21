@@ -16,10 +16,11 @@ import getWeather from "../feature/getWeather";
 const Homepage = () => {
   const [currentLocation, isLocationLoading, isLocationError] = useLocation();
   const [searchLocation, setSearchLocation] = useState("thapathali");
-  function handleSubmit() {
+  function handleSubmit(e) {
     e.preventDefault();
+    refetchWeatherData()
   }
-  const [weatherData, isWeatherLoading, isWeatherError] = useWeatherQueryData(
+  const [weatherData, isWeatherLoading, isWeatherError,refetchWeatherData] = useWeatherQueryData(
     `https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${ApiKey}`
   );
 
