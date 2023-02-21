@@ -15,15 +15,22 @@ import getWeather from "../feature/getWeather";
 
 const Homepage = () => {
   const [currentLocation, isLocationLoading, isLocationError] = useLocation();
-  const [searchLocation, setSearchLocation] = useState("thapathali");
+  const [searchLocation, setSearchLocation] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
-    refetchWeatherData()
+    refetchWeatherData();
   }
-  const [weatherData, isWeatherLoading, isWeatherError,refetchWeatherData] = useWeatherQueryData(
-    `https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${ApiKey}`
-  );
-
+  const [weatherData, isWeatherLoading, isWeatherError, refetchWeatherData] =
+    useWeatherQueryData(
+      searchLocation
+        ? `  https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${ApiKey}
+    `
+        : `https://api.openweathermap.org/data/2.5/weather?lat=${
+            currentLocation?.coords ? currentLocation.coords.latitude : "0"
+          }&lon=${
+            currentLocation?.coords ? currentLocation.coords.longitude : "0"
+          }&appid=${ApiKey}`
+    );
   return (
     <div>
       <>
