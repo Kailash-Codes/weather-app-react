@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import WeatherMainContainer from "../components/WeatherMainContainer";
+import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
 import { useWeatherQueryData } from "../hooks/useWeatherQueryData";
 import { useLocation } from "../hooks/useLocation";
 import {
@@ -18,29 +18,31 @@ const Homepage = () => {
   const [searchLocation, setSearchLocation] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
+    localStorage.setItem("location", searchLocation);
     refetchWeatherData();
   }
   const [weatherData, isWeatherLoading, isWeatherError, refetchWeatherData] =
-    useWeatherQueryData(
-      searchLocation
+    useWeatherQueryData({
+      url: searchLocation
         ? `  https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${ApiKey}
-    `
+  `
         : `https://api.openweathermap.org/data/2.5/weather?lat=${
             currentLocation?.coords ? currentLocation.coords.latitude : "0"
           }&lon=${
             currentLocation?.coords ? currentLocation.coords.longitude : "0"
-          }&appid=${ApiKey}`
-    );
+          }&appid=${ApiKey}`,
+      key: "weather-data",
+    });
   useEffect(() => {
     if (weatherData) {
       setNewWeather(weatherData);
     }
-
     refetchWeatherData();
   }, [weatherData, isWeatherLoading]);
   return (
     <div>
       <>
+        {localStorage.setItem("location", newWeatherData.name)}
         {isLocationLoading ? (
           <Box mt={20}>
             <center>

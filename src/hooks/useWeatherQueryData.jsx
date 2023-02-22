@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useWeatherQueryData = (url) => {
+export const useWeatherQueryData = ({ url, key }) => {
   //   debugger;
   const {
     data: weatherData,
@@ -10,7 +10,7 @@ export const useWeatherQueryData = (url) => {
     isError: isWeatherError,
     refetch: refetchWeatherData,
   } = useQuery({
-    queryKey: ["weather-data"],
+    queryKey: [key],
     queryFn: () => {
       return axios
         .get(url)
