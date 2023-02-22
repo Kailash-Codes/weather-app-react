@@ -1,6 +1,6 @@
 import { Search } from "@mui/icons-material";
 import { Alert, Button, Snackbar, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
 import { ApiKey } from "../config/ApiKey";
 import { useLocation } from "../hooks/useLocation";
@@ -24,6 +24,9 @@ const Homepage = () => {
           }&appid=${ApiKey}`,
       key: "weather-data",
     });
+  useEffect(() => {
+    refetchWeatherData();
+  });
   return (
     <div>
       {isWeatherError ? "error to get weather" : null}
@@ -75,7 +78,9 @@ const Homepage = () => {
                 />
               ) : (
                 <center>
-                    <p className="text-white mt-5">The location is not available. Try another location.</p>
+                  <p className="text-white mt-5">
+                    The location is not available. Try another location.
+                  </p>
                 </center>
               )}
             </div>
