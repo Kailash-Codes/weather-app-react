@@ -13,14 +13,15 @@ const FiveDaysForecast = () => {
   });
   return (
     <div>
-      {isWeatherLoading ? (
+      {isWeatherLoading  || isWeatherError ? (
         "loading"
       ) : (
+        weatherData && weatherData.city ?
         <div className="flex min-h-[70vh] items-center">
           <ForecastContainer
           locationName={weatherData.city.name}
           forecasts = {weatherData.list.filter((forecast)=>forecast.dt_txt.includes("12:00:00"))} />
-        </div>
+        </div> : "error"
       )}
     </div>
   );
