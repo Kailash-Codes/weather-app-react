@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import React from "react";
 import CurrentTime from "./CurrentTime";
 import MainTemp from "./MainTemp";
@@ -11,8 +11,10 @@ import Wind from "./Wind";
 import { Stack } from "@mui/system";
 import FeelsLike from "./FeelsLike";
 import Pressure from "./Pressure";
+import { useNavigate } from "react-router-dom";
 
 const WeatherMainContainer = (props) => {
+  const navigate = useNavigate();
   return (
     <div>
       <div className=" sm:gap-10 items-center sm:items-start justify-center sm:justify-between text-white container flex sm:flex-row flex-col  pt-10 rounded-lg">
@@ -28,6 +30,7 @@ const WeatherMainContainer = (props) => {
           <MainTemp mainTemp={props.mainTemp} />
           <Divider sx={{ borderColor: "white" }} />
           <MinAndMaxTemp minAndMaxTemp={props.minAndMaxTemp} />
+          <Button variant="contained" onClick={()=>navigate('/forecast')}sx={{marginTop:"5px"}}>See forecast</Button>
         </div>
       </div>
       <Stack
