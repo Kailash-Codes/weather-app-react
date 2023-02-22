@@ -15,22 +15,30 @@ import Pressure from "./Pressure";
 const WeatherMainContainer = (props) => {
   return (
     <div>
-    <div className=" sm:gap-10 items-center sm:items-start justify-center sm:justify-between text-white container flex sm:flex-row flex-col  pt-10 rounded-lg">
-      <div className="">
-        <PlaceName placeName={props.placeName} />
-        <CurrentTime />
-        <Divider sx={{ borderColor: "white" }} />
-        <WeatherIcon weatherIcon={props.weatherIcon} />
-        <Divider sx={{ borderColor: "white" }} />
-        <WeatherDescription weatherDesc={props.weatherDesc} />
+      <div className=" sm:gap-10 items-center sm:items-start justify-center sm:justify-between text-white container flex sm:flex-row flex-col  pt-10 rounded-lg">
+        <div className="">
+          <PlaceName placeName={props.placeName} />
+          <CurrentTime />
+          <Divider sx={{ borderColor: "white" }} />
+          <WeatherIcon weatherIcon={props.weatherIcon} />
+          <Divider sx={{ borderColor: "white" }} />
+          <WeatherDescription weatherDesc={props.weatherDesc} />
+        </div>
+        <div className="flex flex-col">
+          <MainTemp mainTemp={props.mainTemp} />
+          <Divider sx={{ borderColor: "white" }} />
+          <MinAndMaxTemp minAndMaxTemp={props.minAndMaxTemp} />
+        </div>
       </div>
-      <div className="flex flex-col">
-        <MainTemp mainTemp={props.mainTemp} />
-        <Divider sx={{ borderColor: "white" }} />
-        <MinAndMaxTemp minAndMaxTemp={props.minAndMaxTemp} />
-      </div>
-    </div>
-      <Stack className="sm:justify-between justify-center" flexDirection="row" gap="50px" justifyContent="center" flexWrap="wrap" color="white" fontSize="30px" mt={5}>
+      <Stack
+        flexDirection="row"
+        gap="50px"
+        className="justify-center md:justify-between"
+        flexWrap="wrap"
+        color="white"
+        fontSize="30px"
+        mt={5}
+      >
         <FeelsLike feelsLikeTemp={props.feelsLikeTemp} />
         <Wind windSpeed={props.windSpeed} />
         <Pressure pressure={props.pressure} />
