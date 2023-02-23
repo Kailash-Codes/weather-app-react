@@ -3,14 +3,19 @@ import { Alert, Button, Snackbar, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
 import { ApiKey } from "../config/ApiKey";
+import { useLocationDetails } from "../components/context/LocationDetailContext";
 import { useLocation } from "../hooks/useLocation";
 import { useWeatherQueryData } from "../hooks/useWeatherQueryData";
 const Homepage = () => {
+  const [location, setLocation] = useLocationDetails();
   const [currentLocation, isLocationLoading, isLocationError] = useLocation();
   const [searchLocation, setSearchLocation] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
     refetchWeatherData();
+    if(searchLocation){
+      setLocation(searchLocation);
+    }
   }
   const [weatherData, isWeatherLoading, isWeatherError, refetchWeatherData] =
     useWeatherQueryData({
@@ -26,7 +31,10 @@ const Homepage = () => {
     });
   useEffect(() => {
     refetchWeatherData();
-  });
+    if (weatherData) {
+      setLocation(weatherData.name);
+    }
+  },[weatherData,isWeatherLoading]);
   return (
     <div>
       {isWeatherError ? "error to get weather" : null}
