@@ -1,19 +1,20 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useLocationDetails } from "../components/context/LocationDetailContext";
 import ForecastContainer from "../components/forecast/ForecastContainer";
 import { ApiKey } from "../config/ApiKey";
-import { useFetchForecast } from "../hooks/fetch/useFetchForcast";
+import { useFetchWeatherData } from "../hooks/fetch/useFetchWeatherData";
 
 const FiveDaysForecast = () => {
-  const navigate = useNavigate();
   const [locationSearched] = useLocationDetails();
-  console.log(locationSearched);
   const {
     data: weatherData,
     isLoading: isWeatherLoading,
     isError: isWeatherError,
-  } = useFetchForecast(`forecast?q=${locationSearched}&appid=${ApiKey}`);
+    error,
+  } = useFetchWeatherData({
+    url: `forecast?q=${locationSearched}&appid=${ApiKey}`,
+    key: "forecast-data",
+  });
   return (
     <div>
       {isWeatherLoading || isWeatherError ? (

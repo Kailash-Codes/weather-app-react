@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "../hooks/useLocation";
 import { ApiKey } from "../config/ApiKey";
-import { useFetchWeather } from "../hooks/fetch/useFetchWeather";
 import { Button, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
 import { useLocationDetails } from "../components/context/LocationDetailContext";
+import { useFetchWeatherData } from "../hooks/fetch/useFetchWeatherData";
 const Homepage = () => {
   //using context
   const [location, setLocation] = useLocationDetails();
@@ -22,9 +22,10 @@ const Homepage = () => {
   }&appid=${ApiKey}`;
   //search location url if user searches
   const searchLocationUrl = `weather/?q=${searchLocation}&appid=${ApiKey}`;
-  const { data, isLoading, isError, refetch } = useFetchWeather(
-    searchLocation ? searchLocationUrl : currentLocationUrl
-  );
+  const { data, isLoading, isError, refetch, error } = useFetchWeatherData({
+    url: searchLocation ? searchLocationUrl : currentLocationUrl,
+    key: "weather-data",
+  });
   data;
   function handleSubmit(e) {
     e.preventDefault();
@@ -32,7 +33,6 @@ const Homepage = () => {
     if (searchLocation) {
       setLocation(searchLocation);
     }
-    console.log(location);
   }
   useEffect(() => {
     if (data) {
@@ -43,10 +43,9 @@ const Homepage = () => {
   }, [data]);
   return (
     <div>
-      {isError ? "error to get weather" : null}
       {isLocationLoading || isLoading ? (
         "Loading"
-      ) : data ? (
+      ) : newWeatherData ? (
         <center>
           <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px]  rounded-xl py-10 px-5 ">
             <form action="" onSubmit={handleSubmit}>
@@ -74,9 +73,12 @@ const Homepage = () => {
               </div>
             </form>
             {/* //weather data if availabe => data */}
-            <div>
-              {localStorage.setItem("location", data.name)}
-              {newWeatherData && newWeatherData.weather ? (
+            {isError ? (
+              <p className="text-xl text-white mt-7">
+                The location is unavailable. Try another one!
+              </p>
+            ) : (
+              <div>
                 <WeatherMainContainer
                   mainTemp={newWeatherData.main.temp}
                   weatherDesc={newWeatherData.weather[0].description}
@@ -90,19 +92,11 @@ const Homepage = () => {
                   feelsLikeTemp={newWeatherData.main.feels_like}
                   pressure={newWeatherData.main.pressure}
                 />
-              ) : (
-                <center>
-                  <p className="text-white mt-5">
-                    The location is not available. Try another location.
-                  </p>
-                </center>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </center>
-      ) : (
-        console.log("error")
-      )}
+      ) : null}
     </div>
   );
 };
