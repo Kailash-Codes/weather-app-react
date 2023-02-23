@@ -1,17 +1,19 @@
-import { isError, useQuery } from "@tanstack/react-query";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useLocationDetails } from "../components/context/LocationDetailContext";
 import ForecastContainer from "../components/forecast/ForecastContainer";
 import { ApiKey } from "../config/ApiKey";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useWeatherQueryData } from "../hooks/useWeatherQueryData";
+import { useFetchForecast } from "../hooks/fetch/useFetchForcast";
 
 const FiveDaysForecast = () => {
+  const navigate = useNavigate();
   const [locationSearched] = useLocationDetails();
-  const [weatherData, isWeatherLoading, isWeatherError] = useWeatherQueryData({
-    url: `https://api.openweathermap.org/data/2.5/forecast/?q=${locationSearched}&appid=${ApiKey}`,
-    key: "forecast-data",
-  });
+  console.log(locationSearched);
+  const {
+    data: weatherData,
+    isLoading: isWeatherLoading,
+    isError: isWeatherError,
+  } = useFetchForecast(`forecast?q=${locationSearched}&appid=${ApiKey}`);
   return (
     <div>
       {isWeatherLoading || isWeatherError ? (

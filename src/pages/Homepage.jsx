@@ -1,46 +1,51 @@
-import { Search } from "@mui/icons-material";
-import { Alert, Button, Snackbar, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
-import { ApiKey } from "../config/ApiKey";
-import { useLocationDetails } from "../components/context/LocationDetailContext";
 import { useLocation } from "../hooks/useLocation";
-import { useWeatherQueryData } from "../hooks/useWeatherQueryData";
+import { ApiKey } from "../config/ApiKey";
+import { useFetchWeather } from "../hooks/fetch/useFetchWeather";
+import { Button, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
+import { useLocationDetails } from "../components/context/LocationDetailContext";
 const Homepage = () => {
+  //using context
   const [location, setLocation] = useLocationDetails();
+  //creating new state for weatherData
+  const [newWeatherData, setNewWeatherData] = useState("");
+  //using useLocation hook
   const [currentLocation, isLocationLoading, isLocationError] = useLocation();
   const [searchLocation, setSearchLocation] = useState("");
+  //url at first render taking data acc to current location
+  const currentLocationUrl = `/weather?lat=${
+    currentLocation?.coords ? currentLocation.coords.latitude : "0"
+  }&lon=${
+    currentLocation?.coords ? currentLocation.coords.longitude : "0"
+  }&appid=${ApiKey}`;
+  //search location url if user searches
+  const searchLocationUrl = `weather/?q=${searchLocation}&appid=${ApiKey}`;
+  const { data, isLoading, isError, refetch } = useFetchWeather(
+    searchLocation ? searchLocationUrl : currentLocationUrl
+  );
+  data;
   function handleSubmit(e) {
     e.preventDefault();
-    refetchWeatherData();
-    if(searchLocation){
+    refetch();
+    if (searchLocation) {
       setLocation(searchLocation);
     }
+    console.log(location);
   }
-  const [weatherData, isWeatherLoading, isWeatherError, refetchWeatherData] =
-    useWeatherQueryData({
-      url: searchLocation
-        ? `  https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${ApiKey}
-  `
-        : `https://api.openweathermap.org/data/2.5/weather?lat=${
-            currentLocation?.coords ? currentLocation.coords.latitude : "0"
-          }&lon=${
-            currentLocation?.coords ? currentLocation.coords.longitude : "0"
-          }&appid=${ApiKey}`,
-      key: "weather-data",
-    });
   useEffect(() => {
-    refetchWeatherData();
-    if (weatherData) {
-      setLocation(weatherData.name);
+    if (data) {
+      setNewWeatherData(data);
     }
-  },[weatherData,isWeatherLoading]);
+    refetch();
+  }, [data]);
   return (
     <div>
-      {isWeatherError ? "error to get weather" : null}
-      {isLocationLoading || isWeatherLoading ? (
+      {isError ? "error to get weather" : null}
+      {isLocationLoading || isLoading ? (
         "Loading"
-      ) : weatherData ? (
+      ) : data ? (
         <center>
           <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px]  rounded-xl py-10 px-5 ">
             <form action="" onSubmit={handleSubmit}>
@@ -67,22 +72,22 @@ const Homepage = () => {
                 </Button>
               </div>
             </form>
-            {/* //weather data if availabe => weatherData */}
+            {/* //weather data if availabe => data */}
             <div>
-              {localStorage.setItem("location", weatherData.name)}
-              {weatherData && weatherData.weather ? (
+              {localStorage.setItem("location", data.name)}
+              {newWeatherData && newWeatherData.weather ? (
                 <WeatherMainContainer
-                  mainTemp={weatherData.main.temp}
-                  weatherDesc={weatherData.weather[0].description}
-                  placeName={weatherData.name}
-                  weatherIcon={weatherData.weather[0].icon}
+                  mainTemp={newWeatherData.main.temp}
+                  weatherDesc={newWeatherData.weather[0].description}
+                  placeName={newWeatherData.name}
+                  weatherIcon={newWeatherData.weather[0].icon}
                   minAndMaxTemp={{
-                    min: weatherData.main.temp_min,
-                    max: weatherData.main.temp_max,
+                    min: newWeatherData.main.temp_min,
+                    max: newWeatherData.main.temp_max,
                   }}
-                  windSpeed={weatherData.wind.speed}
-                  feelsLikeTemp={weatherData.main.feels_like}
-                  pressure={weatherData.main.pressure}
+                  windSpeed={newWeatherData.wind.speed}
+                  feelsLikeTemp={newWeatherData.main.feels_like}
+                  pressure={newWeatherData.main.pressure}
                 />
               ) : (
                 <center>
@@ -100,4 +105,5 @@ const Homepage = () => {
     </div>
   );
 };
+
 export default Homepage;
