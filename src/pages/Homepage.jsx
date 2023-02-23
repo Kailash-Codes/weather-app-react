@@ -37,6 +37,7 @@ const Homepage = () => {
   useEffect(() => {
     if (data) {
       setNewWeatherData(data);
+      setLocation(data.name);
     }
     refetch();
   }, [data]);
