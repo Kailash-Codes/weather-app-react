@@ -40,7 +40,7 @@ const FiveDaysForecast = () => {
           />
         </div>
       ) : isWeatherError ? (
-        <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px]  rounded-xl py-10 px-5 ">
+        <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px] lg:ml-[50%] lg:translate-x-[-50%] rounded-xl py-10 px-5 ">
           <form action="" onSubmit={handleSubmit}>
             <div className="flex gap-5">
               <TextField
