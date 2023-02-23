@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "../hooks/useLocation";
 import { ApiKey } from "../config/ApiKey";
-import { Button, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import WeatherMainContainer from "../components/main-page/WeatherMainContainer";
 import { useLocationDetails } from "../components/context/LocationDetailContext";
@@ -38,13 +38,15 @@ const Homepage = () => {
     if (data) {
       setNewWeatherData(data);
       setLocation(data.name);
+      refetch();
     }
-    refetch();
-  }, [data]);
+  }, [data, isLoading]);
   return (
     <div>
       {isLocationLoading || isLoading ? (
-        "Loading"
+        <div className="flex justify-center items-center min-h-[70vh]">
+          <CircularProgress />
+        </div>
       ) : newWeatherData ? (
         <center>
           <div className="text-center bg-blend-luminosity bg-[url('./assets/images/background.webp')] bg-cover object-cover my-10 lg:w-[800px]  rounded-xl py-10 px-5 ">
